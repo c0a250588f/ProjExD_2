@@ -4,7 +4,6 @@ import random
 import time
 import pygame as pg
 
-
 WIDTH, HEIGHT = 1100, 650
 DELTA = {
     pg.K_UP: (0,-5),  #上
@@ -123,7 +122,6 @@ def main():
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
 
 if __name__ == "__main__":
     pg.init()
