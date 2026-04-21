@@ -46,6 +46,15 @@ def gameover(screen: pg.Surface) -> None:
     
     pg.display.update()
     time.sleep(5)
+def init_bb_imgs() -> tuple[list[pg.Surface],list[int]]:
+    bb_imgs =[]
+    bb_accs =[a for a in range(1,11)]
+    for r in range(1,11):
+        bb_img = pg.Surface((20*r,20*r))
+        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
+        bb_img.set_colorkey((0,0,0))
+        bb_imgs.append(bb_img)
+    return bb_imgs, bb_accs
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -54,6 +63,9 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
+    bb_imgs, bb_accs =init_bb_imgs()
+    bb_img = bb_imgs[0]
+
 
     bb_img =pg.Surface((20,20))
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
@@ -65,6 +77,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     while True:
+        
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
@@ -92,6 +105,16 @@ def main():
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy)
         yoko,tate=check_bound(bb_rct)
+        current_level = min(tmr // 500, 9)
+
+        bb_img = bb_imgs[current_level]
+
+        bb_rct = bb_img.get_rect(center=bb_rct.center)
+
+        avx = vx * bb_accs[current_level]
+        avy = vy * bb_accs[current_level]
+
+        bb_rct.move_ip(avx, avy)
         if not yoko:
             vx *= -1
         if not tate:
